@@ -135,10 +135,13 @@ const Search = () => {
             {/*  */}
             <div className="mt-8">
               {/*  */}
-              <ProductList
-                className="grid grid-cols-1 sm:grid-cols-3  gap-5"
-                products={data?.pages.flatMap((page) => page.content) || []}
-              />
+
+              {!isLoading && (
+                <ProductList
+                  className="grid grid-cols-1 sm:grid-cols-3  gap-5"
+                  products={data?.pages.flatMap((page) => page.content) || []}
+                />
+              )}
 
               {/*    */}
               {(isLoading || isFetchingNextPage) && <div>Loading...</div>}
