@@ -98,7 +98,7 @@ const CategoryForm = ({
           control={form.control}
           title="Category Image"
           type="input"
-          isMutiple={false}
+          isMultiple={false}
         />
         {type === "update" && defaultValues?.image && (
           <img
