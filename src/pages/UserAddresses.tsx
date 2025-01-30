@@ -17,7 +17,7 @@ const UserAddresses = () => {
   const queryClient = useQueryClient();
   const onSuccess = () => {
     queryClient.invalidateQueries({
-      queryKey: ["fetchData", "address/auth"],
+      queryKey: ["fetchData", "/address"],
     });
     toast.success("Address updated successfully");
   };
@@ -28,27 +28,24 @@ const UserAddresses = () => {
       toast.error("Failed to set default address");
     }
   );
-  const handleSetDefault = (id: number) => {
-    console.log("Set as default");
-    return mutate({ data: { id }, type: "put" });
+  const handleSetDefault = (_id: string) => {
+    return mutate({ data: { _id }, type: "put" });
   };
   const {
     isError,
     isLoading,
     data: addresses,
-  } = useFetchData("address/auth", "", "private");
+  } = useFetchData("/address", "", "private");
   if (isError) return <p>Something went wrong</p>;
   if (isLoading) return <p>Loading...</p>;
 
   return (
     <section className="py-8">
-      <h2 className=" uppercase text-3xl font-semibold text-blue-500 text-center">
-        Your Addresses
-      </h2>
-
-      <div className="max-w-5xl space-y-5 mt-12 mx-auto w-full divide-y">
-        <div className="flex w-full items-center justify-between">
-          <p className="text-gray-600 dark:text-white">Your Address</p>
+      <div className="max-w-6xl space-y-5 mt-12 mx-auto w-full ">
+        <div className="flex flex-wrap items-center justify-between">
+          <h2 className=" text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4 tracking-tight">
+            Your Addresses
+          </h2>
           <AddAddress />
         </div>
 
@@ -65,8 +62,8 @@ const UserAddresses = () => {
           )
           .map((address: UserAddress) => (
             <div
-              className="flex justify-between py-3 flex-wrap space-y-3 items-center"
-              key={address.id}
+              className="flex border px-4 border-sky-200 rounded-3xl   justify-between py-4 flex-wrap space-y-3 items-center"
+              key={address._id}
             >
               <div className="space-y-4">
                 <div className="flex h-5 items-center space-x-4 text-sm">
@@ -89,11 +86,11 @@ const UserAddresses = () => {
               </div>
               <div className="space-y-3 flex flex-col justify-center items-start lg:items-end">
                 <div className="flex items-center gap-x-3 flex-wrap">
-                  <EditAddress id={address.id} />
+                  <EditAddress _id={address._id} />
                   {!address.isDefault && (
                     <DeleteService
-                      endpoint={`address/${address.id}`}
-                      queryKey="address/auth"
+                      endpoint={`address/${address._id}`}
+                      queryKey="address"
                     >
                       <Trash className="text-red-500 size-5" />
                     </DeleteService>
@@ -102,7 +99,7 @@ const UserAddresses = () => {
                 {!address.isDefault && (
                   <Button
                     disabled={isPending}
-                    onClick={() => handleSetDefault(address.id)}
+                    onClick={() => handleSetDefault(address._id)}
                     size="sm"
                     className="m-0 text-sm"
                     variant="outline"

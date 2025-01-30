@@ -29,26 +29,26 @@ const SearchForm = ({
     data: categories,
     isLoading: isCategoryLoading,
     isError: isCategoryError,
-  } = useFetchData("/category/all", "", "normal");
+  } = useFetchData("/category", "", "normal");
 
   const {
     data: brands,
     isLoading: isBrandLoading,
     isError: isBrandError,
-  } = useFetchData("/brand/all", "", "normal");
+  } = useFetchData("/brand", "", "normal");
 
   const {
     data: colors,
     isLoading: isColorLoading,
     isError: isColorError,
-  } = useFetchData("/color/all", "", "normal");
+  } = useFetchData("/color", "", "normal");
 
   const {
     data: sizes,
     isSuccess: isSizeSuccess,
     isLoading: isSizeLoading,
     isError: isSizeError,
-  } = useFetchData("/size/all", "", "normal");
+  } = useFetchData("/size", "", "normal");
 
   const [sizeOptions, setSizeOptions] = useState(null);
 
@@ -56,7 +56,7 @@ const SearchForm = ({
   useEffect(() => {
     if (isSizeSuccess) {
       const sizeOptionsMatching = sizes.map((size) => ({
-        value: size.value.toString(),
+        value: size.value,
         label: size.value,
       }));
       setSizeOptions(sizeOptionsMatching);
@@ -66,7 +66,7 @@ const SearchForm = ({
   // price slider
   const [priceValues, setPriceValues] = useState([
     defaultValues?.minPrice || 0,
-    defaultValues?.maxPrice || 20_000,
+    defaultValues?.maxPrice || 1500,
   ]);
 
   // handle price slider change
@@ -99,19 +99,19 @@ const SearchForm = ({
           control={form.control}
           name="category"
           title="Category"
-          options={[{ id: "all", name: "All" }, ...categories]}
+          options={[{ _id: "all", name: "All" }, ...categories]}
           type="key-value"
           displayKey="name"
-          valueKey="id"
+          valueKey="_id"
         />
         <RenderFormSelect
           control={form.control}
           name="brand"
           title="Brand"
-          options={[{ id: "all", name: "All" }, ...brands]}
+          options={[{ _id: "all", name: "All" }, ...brands]}
           type="key-value"
           displayKey="name"
-          valueKey="id"
+          valueKey="_id"
         />
         <RenderFormSelect
           control={form.control}
@@ -120,7 +120,7 @@ const SearchForm = ({
           options={
             colors &&
             colors.map((color) => ({
-              value: color.id.toString(),
+              value: color._id,
               label: color.value,
             }))
           }
@@ -137,9 +137,9 @@ const SearchForm = ({
         )}
         <Slider
           defaultValue={priceValues}
-          max={20_000}
+          max={1500}
           min={0}
-          step={500}
+          step={200}
           onValueChange={handleValueChange}
           className={cn("w-full !mt-8")}
         />

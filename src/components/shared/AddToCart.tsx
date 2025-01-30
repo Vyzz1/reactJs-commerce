@@ -8,7 +8,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 type AddToCartProps = {
   quantity: number;
-  productItemId: number;
+  productItemId: string;
 };
 
 const AddToCart = ({ quantity, productItemId }: AddToCartProps) => {
@@ -18,7 +18,7 @@ const AddToCart = ({ quantity, productItemId }: AddToCartProps) => {
   function onSuccess(data) {
     console.log(data);
     queryClient.invalidateQueries({
-      queryKey: ["fetchData", "/cart/auth"],
+      queryKey: ["fetchData", "/cart"],
     });
 
     toast.success("Add to cart successfully");
@@ -28,6 +28,7 @@ const AddToCart = ({ quantity, productItemId }: AddToCartProps) => {
   });
 
   function handleAdd() {
+    if (isPending) return;
     if (!auth) {
       toast.info("Please login ");
       return;

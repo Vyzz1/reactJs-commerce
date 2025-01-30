@@ -14,14 +14,14 @@ import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 
 type CreateProductItemProps = {
-  productId: number;
+  productId: string;
 };
 
 const CreateProductItem = ({ productId }: CreateProductItemProps) => {
   const queryClient = useQueryClient();
   function onSuccess() {
     queryClient.invalidateQueries({
-      queryKey: ["fetchData", `/product/${productId}/config`],
+      queryKey: ["fetchData", `/product-item/config/${productId}`],
     });
     toast.success("Product item created successfully");
   }

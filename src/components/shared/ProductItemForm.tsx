@@ -25,7 +25,7 @@ const ProductItemForm = ({
     data: sizes,
     isLoading: fetchingSize,
     isError: sizeError,
-  } = useFetchData("/size/all", "", "normal");
+  } = useFetchData("/size", "", "normal");
   const form = useForm<ProductItemType>({
     resolver: zodResolver(productItemSchema),
     defaultValues,
@@ -53,7 +53,7 @@ const ProductItemForm = ({
           title="Size"
           options={sizes}
           type="key-value"
-          valueKey="id"
+          valueKey="_id"
           displayKey="value"
         />
         <Button type="submit" disabled={loading}>

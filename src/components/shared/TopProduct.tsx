@@ -7,7 +7,6 @@ const TopProduct = () => {
     isLoading,
     isError,
   } = useFetchData("/product/show-on-homepage", "", "normal");
-  if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error</div>;
 
   return (
@@ -17,8 +16,9 @@ const TopProduct = () => {
       </h2>
       <div className="max-w-6xl w-full mx-auto">
         <ProductList
+          isLoading={isLoading}
           products={products}
-          className="grid lg:grid-cols-4 gap-5   grid-cols-2  "
+          className="grid lg:grid-cols-4 gap-5   grid-cols-1 sm:grid-cols-2 "
         />
       </div>
     </section>

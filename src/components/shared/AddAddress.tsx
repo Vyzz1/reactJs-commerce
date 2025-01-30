@@ -17,7 +17,7 @@ const AddAddress = () => {
   const onSuccess = () => {
     toast.success("Address added successfully");
     queryClient.invalidateQueries({
-      queryKey: ["fetchData", "address/auth"],
+      queryKey: ["fetchData", "/address"],
     });
   };
 

@@ -13,10 +13,10 @@ type BrandForm = {
   className?: string;
   type: "create" | "update";
 } & (
-  | { type: "create"; id?: never; defaultValues?: BrandFormType }
-  | { type: "update"; id: number; defaultValues: BrandFormType }
+  | { type: "create"; _id?: never; defaultValues?: BrandFormType }
+  | { type: "update"; _id: string; defaultValues: BrandFormType }
 );
-const BrandForm = ({ defaultValues, className, type, id }: BrandForm) => {
+const BrandForm = ({ defaultValues, className, type, _id }: BrandForm) => {
   const form = useForm<BrandFormType>({
     resolver: zodResolver(brandSchema),
     defaultValues: defaultValues,
@@ -26,12 +26,12 @@ const BrandForm = ({ defaultValues, className, type, id }: BrandForm) => {
 
   const success = () => {
     queryClient.invalidateQueries({
-      queryKey: ["fetchData", "/brand/all"],
+      queryKey: ["fetchData", "/brand"],
     });
     toast.success(`Brand ${type === "create" ? "created" : "updated"}!`);
   };
 
-  const endpoint = type === "create" ? "/brand" : `/brand/${id}`;
+  const endpoint = type === "create" ? "/brand" : `/brand/${_id}`;
 
   const { mutate, isPending } = useSubmitData(endpoint, success, (err: any) => {
     if (err.response.data.message) {

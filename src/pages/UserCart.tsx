@@ -19,28 +19,29 @@ const UserCart = () => {
     data: carts,
     isLoading,
     isError,
-  } = useFetchData("/cart/auth", "", "private");
+  } = useFetchData("/cart", "", "private");
   const [selectedItems, setSelectedItems] = useState<CartItem[]>([]);
   const { updateProducts, setTotalCost } = useContext(CheckoutContext);
 
   const total = useMemo(() => {
     return selectedItems.reduce(
-      (acc: number, cart: CartItem) => acc + cart.productPrice * cart.quantity,
+      (acc: number, cart: any) =>
+        acc + cart.productItem.product.price * cart.quantity,
       0
     );
   }, [selectedItems]);
 
-  const handleQuantityChange = (cartId: number, newQuantity: number) => {
+  const handleQuantityChange = (cartId: string, newQuantity: number) => {
     const updatedSelectedItems = selectedItems.map((item) =>
-      item.id === cartId ? { ...item, quantity: newQuantity } : item
+      item._id === cartId ? { ...item, quantity: newQuantity } : item
     );
 
     setSelectedItems(updatedSelectedItems);
   };
 
-  const handleDelete = (cartId: number) => {
+  const handleDelete = (cartId: string) => {
     const updatedSelectedItems = selectedItems.filter(
-      (item) => item.id !== cartId
+      (item) => item._id !== cartId
     );
     setSelectedItems(updatedSelectedItems);
 
@@ -100,24 +101,24 @@ const UserCart = () => {
           <Label>Select All</Label>
         </div>
         <div className="mt-5 grid grid-cols-2 md:grid-cols-4 max-w-4xl  gap-4  w-full overflow-auto ">
-          {carts.map((cart: CartItem) => (
+          {carts.map((cart: any) => (
             <div
-              key={cart.id}
+              key={cart._id}
               className="space-y-6  lg:w-full  py-3 px-2 border "
             >
               <div className="relative">
                 <img
-                  src={cart.avatar}
-                  alt={cart.productName}
+                  src={cart.productItem.product.avatar}
+                  alt={cart.productItem.product.name}
                   className=" h-fit  aspect-square object-cover rounded-sm"
                 />
                 <Checkbox
-                  id={cart.id.toString()}
-                  checked={selectedItems.some((item) => item.id === cart.id)}
+                  id={cart._id.toString()}
+                  checked={selectedItems.some((item) => item._id === cart._id)}
                   onCheckedChange={() => {
-                    if (selectedItems.some((item) => item.id === cart.id)) {
+                    if (selectedItems.some((item) => item._id === cart._id)) {
                       setSelectedItems(
-                        selectedItems.filter((item) => item.id !== cart.id)
+                        selectedItems.filter((item) => item._id !== cart._id)
                       );
                       return;
                     }
@@ -128,27 +129,28 @@ const UserCart = () => {
               </div>
               <div className="space-y-1">
                 <p className="text-base text-slate-600  dark:text-white lg:max-w-full  text-nowrap truncate ">
-                  {cart.productName}
+                  {cart.productItem.product.name}
                 </p>
                 <p className="text-muted-foreground text-sm">
-                  {cart.productItem.productSize.value} - {cart.color}
+                  {cart.productItem.productSize.value} -{" "}
+                  {cart.productItem.product.productColor.value}
                 </p>
                 <p className="text-base text-red-500 py-1 text-center font-semibold">
-                  ${cart.productPrice}
+                  ${cart.productItem.product.price}
                 </p>
                 <div className="flex items-center justify-center">
                   <ToggleQuantity
                     quantity={cart.quantity}
-                    cartId={cart.id}
-                    onQuantityChange={(v) => handleQuantityChange(cart.id, v)}
+                    cartId={cart._id}
+                    onQuantityChange={(v) => handleQuantityChange(cart._id, v)}
                     max={cart.productItem.quantity}
                   />
                 </div>
                 <div className="flex !mt-3 justify-center items-center">
                   <DeleteService
-                    endpoint={`cart/${cart.id}`}
-                    queryKey={"/cart/auth"}
-                    onDeleted={() => handleDelete(cart.id)}
+                    endpoint={`cart/${cart._id}`}
+                    queryKey={"/cart"}
+                    onDeleted={() => handleDelete(cart._id)}
                   >
                     <Button size="sm" variant="destructive">
                       <Trash2Icon className="size-4 mr-2" />

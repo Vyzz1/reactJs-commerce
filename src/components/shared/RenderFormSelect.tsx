@@ -72,11 +72,8 @@ const RenderFormSelect = <T extends FieldValues>({
                         <SelectContent>
                           {options.length > 0 ? (
                             options.map((option, idx) => (
-                              <SelectItem
-                                value={option[valueKey].toString()}
-                                key={idx}
-                              >
-                                {option[displayKey].toString()}
+                              <SelectItem value={option[valueKey]} key={idx}>
+                                {option[displayKey]}
                               </SelectItem>
                             ))
                           ) : (
@@ -91,8 +88,8 @@ const RenderFormSelect = <T extends FieldValues>({
                         <SelectContent>
                           {options.length > 0 ? (
                             options.map((option, idx) => (
-                              <SelectItem value={option.toString()} key={idx}>
-                                {option.toString()}
+                              <SelectItem value={option} key={idx}>
+                                {option}
                               </SelectItem>
                             ))
                           ) : (

@@ -19,7 +19,7 @@ const useRefreshToken = (isInProtectedRoutes = true) => {
       });
 
       setAuth((prev) => {
-        return { ...prev, accessToken: response.data.token };
+        return { ...prev, accessToken: response.data.accessToken };
       });
 
       return response.data.token;

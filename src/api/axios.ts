@@ -1,6 +1,5 @@
 import axios from "axios";
-export const baseURL =
-  "https://favourable-merralee-kvtcompany-60ae5da4.koyeb.app";
+export const baseURL = "https://fastify-ecommerce-server.vercel.app";
 
 export default axios.create({
   baseURL: baseURL,

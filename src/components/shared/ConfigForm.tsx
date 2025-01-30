@@ -15,14 +15,14 @@ type ConfigForm = {
   type: "create" | "update";
   configType: "size" | "color";
 } & (
-  | { type: "create"; id?: never; defaultValues?: ConfigFormType }
-  | { type: "update"; id: number; defaultValues: ConfigFormType }
+  | { type: "create"; _id?: never; defaultValues?: ConfigFormType }
+  | { type: "update"; _id: string; defaultValues: ConfigFormType }
 );
 const ConfigForm = ({
   defaultValues,
   type,
   configType,
-  id,
+  _id,
   className,
 }: ConfigForm) => {
   const form = useForm<ConfigFormType>({
@@ -35,13 +35,13 @@ const ConfigForm = ({
   const queryClient = useQueryClient();
   const success = () => {
     queryClient.invalidateQueries({
-      queryKey: ["fetchData", `/${configType}/all`],
+      queryKey: ["fetchData", `/${configType}`],
     });
     toast.success(`Category ${type === "create" ? "created" : "updated"}!`);
   };
 
   const endpoint =
-    type === "create" ? `/${configType}` : `/${configType}/${id}`;
+    type === "create" ? `/${configType}` : `/${configType}/${_id}`;
   const { mutate, isPending } = useSubmitData(endpoint, success, (err: any) => {
     if (err.response.data.message) {
       toast.error(err.response.data.message);

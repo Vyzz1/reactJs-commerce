@@ -34,7 +34,7 @@ const ChangeAddress = ({ addresses, setAddress }: ChangeAddressProps) => {
             onValueChange={(v) => setAddress(v)}
             defaultValue={addresses
               .find((address) => address.isDefault)
-              ?.id.toString()}
+              ._id.toString()}
           >
             {addresses
               .sort(
@@ -43,16 +43,16 @@ const ChangeAddress = ({ addresses, setAddress }: ChangeAddressProps) => {
               )
               .map((address: UserAddress) => (
                 <div
-                  key={address.id}
+                  key={address._id}
                   className="flex items-center w-full gap-x-3"
                 >
                   <RadioGroupItem
-                    value={address.id.toString()}
-                    id={address.id.toString()}
+                    value={address._id.toString()}
+                    id={address._id.toString()}
                   />
                   <div
                     className="flex justify-between py-3  items-center"
-                    key={address.id}
+                    key={address._id}
                   >
                     <div className="space-y-4">
                       <div className="flex h-5 items-center space-x-4 text-sm">

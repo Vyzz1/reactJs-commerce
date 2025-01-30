@@ -28,6 +28,11 @@ import ManageConfig from "./pages/MangeConfig";
 
 import ManageUser from "./pages/ManageUser";
 import ManageOrder from "./pages/ManageOrder";
+import { AvatarUpdateForm } from "./pages/AvatarUpdateForm";
+import PaymentSuccessPage from "./pages/PaymentSuccess";
+import PaymentCancel from "./pages/PaymentCancel";
+import ManagePayments from "./pages/ManagePayments";
+import UserPayments from "./pages/UserPayments";
 const App = () => {
   const router = createBrowserRouter([
     {
@@ -57,6 +62,14 @@ const App = () => {
         {
           path: "search",
           element: <Search />,
+        },
+        {
+          path: "/success",
+          element: <PaymentSuccessPage />,
+        },
+        {
+          path: "cancel",
+          element: <PaymentCancel />,
         },
         {
           element: <CartLayout />,
@@ -99,8 +112,12 @@ const App = () => {
               element: <ChangePassword />,
             },
             {
-              path: "update-logo",
-              element: <UpdateLogo />,
+              path: "update-avatar",
+              element: <AvatarUpdateForm />,
+            },
+            {
+              path: "history-payments",
+              element: <UserPayments />,
             },
           ],
         },
@@ -129,6 +146,10 @@ const App = () => {
             {
               path: "change-password",
               element: <ChangePassword />,
+            },
+            {
+              path: "manage-payments",
+              element: <ManagePayments />,
             },
             {
               path: "product-config",

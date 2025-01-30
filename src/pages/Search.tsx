@@ -3,7 +3,6 @@ import { SearchType } from "@/zod";
 import { FilterIcon } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useSearchParams } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 import { axiosUpload } from "@/api/axios";
 import ProductList from "@/components/shared/ProductList";
@@ -123,7 +122,7 @@ const Search = () => {
                     className="text-sm  text-slate-950 dark:text-white rounded-xl border border-sky-200
                       dark:data-[state=on]:bg-slate-400/50 data-[state=on]:bg-black/15 data-[state=on]:border-sky-400
                     "
-                    id={sortType.id.toString()}
+                    key={sortType.id}
                     value={sortType.value}
                   >
                     {sortType.label}
@@ -136,15 +135,17 @@ const Search = () => {
             <div className="mt-8">
               {/*  */}
 
-              {!isLoading && (
-                <ProductList
-                  className="grid grid-cols-1 sm:grid-cols-3  gap-5"
-                  products={data?.pages.flatMap((page) => page.content) || []}
-                />
-              )}
+              <ProductList
+                className="grid grid-cols-1 sm:grid-cols-3  gap-5"
+                isLoading={isLoading}
+                products={data?.pages.flatMap((page) => page.content) || []}
+              />
 
-              {/*    */}
-              {(isLoading || isFetchingNextPage) && <div>Loading...</div>}
+              {isFetchingNextPage && (
+                <div className="px-3 py-2 text-base font-inter ">
+                  Loading...
+                </div>
+              )}
 
               <span ref={ref}></span>
             </div>

@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import ToggleTheme from "./ToggleTheme";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Menu, SettingsIcon, SquareChartGantt } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
@@ -19,6 +18,7 @@ import useLogout from "@/hooks/useLogout";
 import ToggleCart from "./ToggleCart";
 import PersitentLogin from "@/layout/PersitentLogin";
 import { CommandMenu } from "./CommandMenu";
+import { ToggleTheme } from "./ToggleTheme";
 
 const Header = () => {
   const { currentUser } = useAuth();
@@ -65,7 +65,7 @@ const Header = () => {
           {pageNavigation}
         </div>
 
-        <div className="flex w-full lg:w-fit items-center gap-x-3">
+        <div className="flex w-full md:w-fit items-center gap-x-3">
           {/* Sheet for mobile  */}
           <Sheet>
             <SheetTrigger>

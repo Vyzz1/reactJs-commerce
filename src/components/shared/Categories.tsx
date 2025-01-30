@@ -8,7 +8,10 @@ const Categories = () => {
     data: categories,
     isLoading,
     isError,
-  } = useFetchData("/category/all", "", "normal");
+  } = useFetchData("/category", "", "normal");
+
+  console.log(categories);
+
   const navigate = useNavigate();
   if (isLoading) return <div>Loading...</div>;
   if (isError) throw new Error("Something went wrong");
@@ -21,8 +24,8 @@ const Categories = () => {
       <div className="max-w-6xl flex gap-5  justify-center items-center flex-wrap w-full mx-auto">
         {categories.map((category: any) => (
           <Card
-            key={category.id}
-            onClick={() => navigate(`/search?category=${category.id}`)}
+            key={category._id}
+            onClick={() => navigate(`/search?category=${category._id}`)}
           >
             <CardHeader>
               <CardTitle className="text-center text-xl text-gray-700 dark:text-white">

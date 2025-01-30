@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 
 type ToggleQuantityProps = {
-  cartId: number;
+  cartId: string;
   max: number;
   quantity: number;
   onQuantityChange: (v: number) => void;
@@ -22,7 +22,7 @@ const ToggleQuantity = ({
   const queryClient = useQueryClient();
   const onSuccess = () => {
     queryClient.invalidateQueries({
-      queryKey: ["fetchData", "/cart/auth"],
+      queryKey: ["fetchData", "/cart"],
     });
   };
   const { mutate, isPending } = useSubmitData(

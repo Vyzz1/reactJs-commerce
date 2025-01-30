@@ -24,6 +24,7 @@ import { Link, useParams } from "react-router-dom";
 import "yet-another-react-lightbox/styles.css";
 import DOMPurify from "dompurify";
 import useSetTitle from "@/hooks/useSetTitle";
+import Loader from "@/components/shared/loader";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -70,7 +71,7 @@ const ProductDetails = () => {
   }, [isSuccess, product, size]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
   if (isError) {
     return <div>Error</div>;
@@ -115,8 +116,11 @@ const ProductDetails = () => {
               <h2 className="text-4xl tracking-wide font-inter text-slate-800 text-start font-bold dark:text-gray-100">
                 {product.name}
               </h2>
-              <p className="text-center tracking-wider font-light text-sky-600 text-[25px]">
-                {product.price}$
+              <p className="text-center tracking-tight font-semibold text-red-400 text-[25px]">
+                {product.price.toLocaleString("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                })}
               </p>
               <p>
                 Condition :{" "}
@@ -187,7 +191,7 @@ const ProductDetails = () => {
               <div className="flex items-center gap-x-2 ">
                 <AddToCart
                   quantity={selectedQuantity}
-                  productItemId={productItem?.id}
+                  productItemId={productItem?._id}
                 />
               </div>
               <div className="flex flex-col   divide-y ">
@@ -223,7 +227,7 @@ const ProductDetails = () => {
               </AccordionItem>
             </Accordion>
           </div>
-          <FindRandom productId={parseInt(id)} />
+          <FindRandom productId={id} />
         </div>
       </section>
     )

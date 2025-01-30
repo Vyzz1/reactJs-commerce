@@ -16,14 +16,14 @@ const ManageProduct = () => {
     data: products,
     isLoading,
     isError,
-  } = useFetchData("/product/all", "", "private");
+  } = useFetchData("/product", "", "private");
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error...</div>;
 
   const columns: ColumnDef<Product>[] = [
     {
-      accessorKey: "id",
+      accessorKey: "_id",
       header: "ID",
     },
     {
@@ -32,7 +32,7 @@ const ManageProduct = () => {
       cell: ({ row }) => {
         return (
           <ShowHomepageCheck
-            id={row.original.id}
+            _id={row.original._id}
             showHomepage={row.original.showHomepage}
           />
         );
@@ -44,7 +44,7 @@ const ManageProduct = () => {
       cell: ({ row }) => {
         return (
           <Link
-            to={`/product/${row.original.id}`}
+            to={`/product/${row.original._id}`}
             className="text-gray-950 dark:text-white hover:underline"
           >
             {row.original.name}
@@ -57,6 +57,16 @@ const ManageProduct = () => {
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Price" />
       ),
+      cell: ({ row }) => {
+        return (
+          <span className="text-red-500 font-bold text-base dark:text-white">
+            {row.original.price.toLocaleString("en-US", {
+              style: "currency",
+              currency: "USD",
+            })}
+          </span>
+        );
+      },
     },
     {
       accessorKey: "category.name",
@@ -67,7 +77,7 @@ const ManageProduct = () => {
       header: "Brand",
     },
     {
-      header: "Image",
+      header: "Avatar",
       cell: ({ row }) => {
         return (
           <img
@@ -90,14 +100,14 @@ const ManageProduct = () => {
         return (
           <div className="flex gap-x-2 items-center ">
             <Link
-              to={`/admin/update-product/${row.original.id}`}
+              to={`/admin/update-product/${row.original._id}`}
               className="text-sky-400 hover:underline"
             >
               Edit
             </Link>
             <DeleteService
-              endpoint={`product/${row.original.id}`}
-              queryKey="/product/all"
+              endpoint={`product/${row.original._id}`}
+              queryKey="/product"
             >
               <Trash2Icon className="size-5 text-red-500" />
             </DeleteService>

@@ -14,12 +14,12 @@ const ManageBrand = () => {
     data: categories,
     isLoading,
     isError,
-  } = useFetchData("/brand/all", "", "normal");
+  } = useFetchData("/brand", "", "normal");
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error</div>;
   const columns: ColumnDef<Category>[] = [
     {
-      accessorKey: "id",
+      accessorKey: "_id",
       header: "ID",
     },
     {
@@ -36,11 +36,11 @@ const ManageBrand = () => {
             <EditProductParents
               type="brand"
               instance={row.original}
-              id={row.original.id}
+              _id={row.original._id}
             />
             <DeleteService
-              endpoint={`brand/${row.original.id}`}
-              queryKey="/brand/all"
+              endpoint={`brand/${row.original._id}`}
+              queryKey="/brand"
             >
               <Trash2Icon className="h-5 w-5" />
             </DeleteService>

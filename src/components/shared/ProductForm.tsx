@@ -19,14 +19,14 @@ type ProductFormProps = {
   defaultValues?: ProductFormType;
   className?: string;
   type: "create" | "update";
-  id?: number;
+  _id?: string;
   images?: string[];
   setImages?: (images: string[]) => void;
 };
 
 const ProductForm = ({
   type,
-  id,
+  _id,
   defaultValues,
   images,
   className,
@@ -41,19 +41,19 @@ const ProductForm = ({
     data: categories,
     isLoading: fetchingCategory,
     isError: categoryError,
-  } = useFetchData("/category/all", "", "normal");
+  } = useFetchData("/category", "", "normal");
 
   const {
     data: brands,
     isLoading: fetchingBrand,
     isError: brandError,
-  } = useFetchData("/brand/all", "", "normal");
+  } = useFetchData("/brand", "", "normal");
 
   const {
     data: colors,
     isLoading: fetchingColor,
     isError: colorError,
-  } = useFetchData("/color/all", "", "normal");
+  } = useFetchData("/color", "", "normal");
 
   const queryClient = useQueryClient();
 
@@ -63,21 +63,23 @@ const ProductForm = ({
     queryClient.invalidateQueries({
       queryKey: [
         "fetchData",
-        type === "create" ? "/product/all" : `/product/${id}`,
+        type === "create" ? "/product" : `/product/${_id}`,
       ],
     });
 
-    queryClient.setQueryData(["fetchData", `/product/${data.id}`], data);
+    if (type === "update") {
+      queryClient.setQueryData(["fetchData", `/product/${data._id}`], data);
+    }
 
     navigate(
       type === "create"
-        ? `/admin/product/${data.id}/config`
-        : `/product/${data.id}`
+        ? `/admin/product/${data._id}/config`
+        : `/product/${data._id}`
     );
 
     toast.success(`Product ${type === "create" ? "created" : "updated"}!`);
   };
-  const endpoint = type === "create" ? "/product" : `/product/${id}`;
+  const endpoint = type === "create" ? "/product" : `/product/${_id}`;
 
   const { mutate, isPending } = useSubmitData(endpoint, onSuccess, () => {
     toast.error("Error creating product");
@@ -112,7 +114,8 @@ const ProductForm = ({
       if (formData.images.length > 0) {
         if (formData.images instanceof FileList) {
           const files = new FormData();
-          Array.from(formData.images).forEach((file) => {
+
+          Array.from(new Set(formData.images)).forEach((file) => {
             files.append("files", file);
           });
 
@@ -175,14 +178,14 @@ const ProductForm = ({
             control={form.control}
             title="Display Avatar"
             type="input"
-            isMultible={false}
+            isMultiple={false}
           />
           <RenderFormUpload
             name="images"
             control={form.control}
             title="Product Images"
             type="input"
-            isMultible
+            isMultiple
           />
         </div>
         <RenderFormSelect
@@ -190,7 +193,7 @@ const ProductForm = ({
           title="Color"
           control={form.control}
           options={colors}
-          valueKey="id"
+          valueKey="_id"
           displayKey="value"
         />
 
@@ -200,14 +203,14 @@ const ProductForm = ({
             title="Category"
             control={form.control}
             options={categories}
-            valueKey="id"
+            valueKey="_id"
             className="w-1/2"
             displayKey="name"
           />
           <RenderFormSelect
             control={form.control}
             options={brands}
-            valueKey="id"
+            valueKey="_id"
             displayKey="name"
             name="brandId"
             title="Brand"

@@ -1,4 +1,3 @@
-import { baseURL } from "@/api/axios";
 import RenderFormUpload from "@/components/shared/RenderFormUpload";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
@@ -35,15 +34,20 @@ const UpdateLogo = () => {
     resolver: zodResolver(formSchema),
   });
 
-  const onSuccess = () => {
+  const onSuccess = (data) => {
     setLoading(false);
     form.reset();
+    updateCurrentUser({
+      ...currentUser,
+      photoUrl: `${data.publicUrl}`,
+    });
     toast.success("File uploaded successfully");
   };
 
   const { mutate } = useSubmitData("/auth/update-logo", onSuccess, () => {
     console.log("error");
     setLoading(false);
+    toast.error("Error uploading file");
   });
 
   const axios = useAxiosPrivate({ type: "upload" });
@@ -61,11 +65,6 @@ const UpdateLogo = () => {
       const res = await axios.post("/file", formData);
 
       if (res.data) {
-        updateCurrentUser({
-          ...currentUser,
-          photoUrl: `${res.data.publicUrl}`,
-        });
-
         return mutate({
           data: {
             photoUrl: `${res.data.publicUrl}`,
@@ -96,7 +95,7 @@ const UpdateLogo = () => {
         >
           <RenderFormUpload
             type="input"
-            isMultible={false}
+            isMultiple={false}
             control={form.control}
             name="avatar"
             accecptedFiles="image/*"

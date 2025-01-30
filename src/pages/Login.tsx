@@ -13,9 +13,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import RenderFormField from "@/components/shared/RenderFormField";
 import { toast } from "sonner";
-import { normalAxios } from "@/api/axios";
+import axios from "@/api/axios";
 import { useAuth } from "@/hooks/useAuth";
 import useSetTitle from "@/hooks/useSetTitle";
+import React from "react";
+import { FaSpinner } from "react-icons/fa";
 const Login = () => {
   useSetTitle("Login");
   const loginSchema = z.object({
@@ -33,6 +35,8 @@ const Login = () => {
 
   const { updateCurrentUser, setAuth, currentUser } = useAuth();
 
+  const [loading, setLoading] = React.useState(false);
+
   if (currentUser) {
     // navigate(-1);
     return <Navigate to={"/"} replace />;
@@ -40,15 +44,18 @@ const Login = () => {
 
   const handleSubmit = async (data: LoginType) => {
     try {
-      const res = await normalAxios.post("/auth/login", data);
+      setLoading(true);
+      const res = await axios.post("/auth/login", data);
 
       if (res) {
-        const { id, token, name, role } = res.data;
+        const { _id, token, name, role, photoURL } = res.data;
+
+        console.log(photoURL);
 
         updateCurrentUser({
-          photoUrl: res.data?.photoUrl,
+          photoUrl: photoURL,
           name: name,
-          id,
+          _id,
           role,
         });
 
@@ -62,10 +69,12 @@ const Login = () => {
     } catch (error) {
       console.error(error);
       toast.error("Email or password is incorrect");
+    } finally {
+      setLoading(false);
     }
   };
   return (
-    <section className="py-8 ">
+    <section className="py-8 px-4 ">
       <div className="max-w-lg w-full mx-auto ">
         <Card className="w-full ">
           <CardHeader>
@@ -109,8 +118,15 @@ const Login = () => {
                     Forgot your password?
                   </Link>
                 </div>
-                <Button type="submit" className="w-full">
-                  Login
+                <Button type="submit" className="w-full" disabled={loading}>
+                  {loading ? (
+                    <span className="flex items-center justify-center">
+                      <FaSpinner className="animate-spin mr-2" />
+                      Logging in...
+                    </span>
+                  ) : (
+                    "Login"
+                  )}
                 </Button>
               </form>
             </Form>

@@ -4,20 +4,20 @@ import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 
 type ShowHomepageCheckProps = {
-  id: number;
+  _id: string;
   showHomepage: boolean;
 };
 
-const ShowHomepageCheck = ({ id, showHomepage }: ShowHomepageCheckProps) => {
+const ShowHomepageCheck = ({ _id, showHomepage }: ShowHomepageCheckProps) => {
   const queryClient = useQueryClient();
   const success = () => {
     queryClient.invalidateQueries({
-      queryKey: ["fetchData", "/product/all"],
+      queryKey: ["fetchData", "/product"],
     });
     toast.success(`Product updated successfully`);
   };
   const { mutate, isPending } = useSubmitData(
-    `product/show/${id}`,
+    `product/show/${_id}`,
     success,
     () => {
       toast.error("Failed to update product");

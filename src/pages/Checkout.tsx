@@ -1,6 +1,9 @@
+import AddAddress from "@/components/shared/AddAddress";
 import ChangeAddress from "@/components/shared/ChangeAddress";
+import PaymentMethodSelect from "@/components/shared/PaymentMethodSelect";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+
 import { Separator } from "@/components/ui/separator";
 import { CheckoutContext } from "@/context/CheckoutContext";
 import { SHPPING_FEE } from "@/data";
@@ -17,29 +20,50 @@ const Checkout = () => {
   useSetTitle("Checkout");
 
   const { isLoading, isSuccess, isError, data } = useFetchData(
-    "/address/auth",
+    "/address",
     "",
     "private"
   );
+
   const [selectedAddress, setSelectedAddress] = useState(null);
+
+  const [paymentMethod, setPaymentMethod] = useState("cash");
 
   const { products, total } = useContext(CheckoutContext);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
+  // handle for orders
   function onSucess(data: any) {
     toast.success("Order placed successfully");
-    queryClient.setQueryData(["fetchData", `/order/${data.id}`], data);
-    navigate(`/order/${data.id}`);
+    queryClient.setQueryData(["fetchData", `/order/${data._id}`], data);
+
+    navigate(`/order/${data._id}`);
   }
+
+  //handle for stripe payment
+
+  const onPaymentSuccess = (data: any) => {
+    window.location.href = data.url;
+  };
 
   const { mutate, isPending } = useSubmitData("/order", onSucess, () => {
     toast.error("An error occurred");
   });
 
+  //handle for payment stripe
+
+  const { mutate: pay, isPending: isPaying } = useSubmitData(
+    "/payment",
+    onPaymentSuccess,
+    () => {
+      toast.error("An error occurred");
+    }
+  );
   useEffect(() => {
     if (isSuccess && data.length) {
       const defaultAddress = data.find((address) => address.isDefault);
-      if (defaultAddress) setSelectedAddress(defaultAddress.id);
+      if (defaultAddress) setSelectedAddress(defaultAddress._id);
     }
   }, [isSuccess, data]);
 
@@ -52,20 +76,18 @@ const Checkout = () => {
   if (data.length === 0) {
     return (
       <div className="container space-y-8  h-screen">
-        <h2 className="text-2xl mt-10 text-center text-indigo-400">
+        <h2 className="text-4xl mt-10 text-center text-indigo-400">
           Please add an address to continue
         </h2>
         <div className="flex justify-center ">
-          <Button onClick={() => navigate("/user/address")} size="sm">
-            Add Address
-          </Button>
+          <AddAddress />
         </div>
       </div>
     );
   }
-  const renderAddressDetails = (selectedAddressId: any) => {
+  const renderAddressDetails = (selectedAddressId: string) => {
     const address = data.find(
-      (addr: UserAddress) => addr.id === parseInt(selectedAddressId)
+      (addr: UserAddress) => addr._id === selectedAddressId
     );
 
     if (!address) return null;
@@ -96,18 +118,39 @@ const Checkout = () => {
       </div>
     );
   };
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
+    const referenceId = Math.floor(Math.random() * 1000000) + "" + Date.now();
+
     const data = {
       total: total + SHPPING_FEE,
       shippingFee: SHPPING_FEE,
-      addressId: selectedAddress,
+      address: selectedAddress,
       orderDetails: products.map((product) => ({
-        productItemId: product.productItem.id,
+        productItemId: product.productItem,
         quantity: product.quantity,
       })),
+      method: paymentMethod,
+      ...(paymentMethod !== "cash" && { statusPay: "pending", referenceId }),
     };
 
-    return mutate({ data, type: "post" });
+    //create order
+
+    if (paymentMethod === "stripe") {
+      mutate({ data, type: "post" });
+
+      const paymentData = {
+        request: products.map((product) => ({
+          productItem: product.productItem,
+          quantity: product.quantity,
+        })),
+        total: total + SHPPING_FEE,
+        referenceId,
+      };
+
+      return pay({ data: paymentData, type: "post" });
+    } else {
+      return mutate({ data, type: "post" });
+    }
   };
 
   return (
@@ -135,37 +178,38 @@ const Checkout = () => {
             </div>
             <Separator />
             <div className="flex flex-wrap gap-3  items-center w-full">
-              {products.map((product) => (
+              {products.map((product: any) => (
                 <div
-                  key={product.id}
+                  key={product._id}
                   className="flex-col flex  w-fit border items-center overflow-hidden 
                     py-2 px-2
                   gap-y-2 justify-center"
                 >
                   <img
-                    src={product.avatar}
-                    alt={product.productName}
+                    src={product.productItem.product.avatar}
+                    alt={product.productItem.product.name}
                     className=" aspect-square w-40 object-cover rounded-sm"
                   />
                   <p className="text-slate-700 dark:text-white max-w-[150px]  truncate ">
-                    {product.productName}
+                    {product.productItem.product.name}
                   </p>
                   <p className="text-red-500">
-                    {product.quantity} x {product.productPrice}$
+                    {product.quantity} x {product.productItem.product.price}$
                   </p>
                   <div className="text-muted-foreground text-sm">
-                    {product.productItem.productSize.value} - {product.color}
+                    {product.productItem.productSize.value} -{" "}
+                    {product.productItem.product.productColor.value}
                   </div>
                 </div>
               ))}
             </div>
           </div>
           <Separator />
-          <div className="flex  bottom-5 border shadow-sm px-3 py-2 border-slate-100 z-10 bg-white/5 justify-end items-center">
+          <div className="flex  bottom-5 border shadow-sm px-3 py-2 border-slate-100 z-10 bg-white/5 dark:bg-transparent justify-end items-center">
             <div className="flex-col space-y-3 max-w-lg w-full ">
               <div className="flex w-full items-center justify-between">
                 <p className="text-base">Payment Method</p>
-                <p className="text-red-500 text-sm">Cash on Delivery</p>
+                <PaymentMethodSelect onSelect={setPaymentMethod} />
               </div>
               <div className="flex w-full items-center justify-between">
                 <p className="text-lg">Shpping Fee</p>
@@ -173,11 +217,11 @@ const Checkout = () => {
               </div>
               <div className="flex w-full items-center justify-between">
                 <p className="text-lg">Total</p>
-                <p className="text-red-500">${total + SHPPING_FEE}</p>
+                <p className="text-red-500">${SHPPING_FEE + total}</p>
               </div>
               <div className="flex w-full items-center justify-end">
                 <Button
-                  disabled={isPending}
+                  disabled={isPending || isPaying}
                   onClick={handlePlaceOrder}
                   size="sm"
                 >

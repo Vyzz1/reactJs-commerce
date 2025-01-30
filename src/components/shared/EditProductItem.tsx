@@ -12,23 +12,23 @@ import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 
 type CreateProductItemProps = {
-  prodcutId: number;
+  productId: string;
   productItem: ProductItem;
 };
 const EditProductItem = ({
-  prodcutId,
+  productId,
   productItem,
 }: CreateProductItemProps) => {
   const [defaultValues, setDefaultValues] = useState(null);
   const queryClient = useQueryClient();
   function onSuccess() {
     queryClient.invalidateQueries({
-      queryKey: ["fetchData", `/product/${[prodcutId]}/config`],
+      queryKey: ["fetchData", `/product-item/config/${productId}`],
     });
     toast.success("Product item updated successfully");
   }
   const { mutate, isPending } = useSubmitData(
-    `/product-item/${productItem.id}`,
+    `/product-item/${productItem._id}`,
     onSuccess,
     (e: any) => {
       if (e?.response.data.message) {
@@ -43,7 +43,7 @@ const EditProductItem = ({
     if (productItem) {
       setDefaultValues({
         ...productItem,
-        productSizeId: productItem.productSize.id.toString(),
+        productSizeId: productItem.productSize._id,
       });
     }
   }, [productItem]);

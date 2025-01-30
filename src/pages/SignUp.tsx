@@ -48,7 +48,7 @@ const SignUp = () => {
   };
 
   return (
-    <section className="py-8">
+    <section className="py-8 px-4">
       <div className="max-w-xl w-full mx-auto">
         <Card className="w-full">
           <CardHeader>

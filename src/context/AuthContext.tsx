@@ -17,7 +17,7 @@ type AuthContextType = {
 type CurrentUserType = {
   photoUrl: string;
   name: string;
-  id: number;
+  _id: string;
   role: string;
 };
 
@@ -32,6 +32,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoggedOut, setIsLoggedOut] = useState<boolean>(false);
 
   const updateCurrentUser = (user: CurrentUserType) => {
+    console.log("Received user", user);
+
     setCurrentUser(user);
     localStorage.setItem("user", JSON.stringify(user));
   };

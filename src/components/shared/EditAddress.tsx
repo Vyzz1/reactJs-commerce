@@ -8,12 +8,12 @@ import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 
 type EditAddressProps = {
-  id: number;
+  _id: string;
 };
 
-const EditAddress = ({ id }: EditAddressProps) => {
+const EditAddress = ({ _id }: EditAddressProps) => {
   const { data, isLoading, isError } = useFetchData(
-    `/address/${id}`,
+    `/address/${_id}`,
     "",
     "private"
   );
@@ -21,11 +21,11 @@ const EditAddress = ({ id }: EditAddressProps) => {
   const onSuccess = () => {
     toast.success("Address updated successfully");
     queryClient.invalidateQueries({
-      queryKey: ["fetchData", "address/auth"],
+      queryKey: ["fetchData", "address"],
     });
   };
   const { mutate, isPending } = useSubmitData(
-    `/address/${id}`,
+    `/address/${_id}`,
     onSuccess,
     () => {
       toast.error("Failed to add address");

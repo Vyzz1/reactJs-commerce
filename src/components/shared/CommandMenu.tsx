@@ -21,7 +21,6 @@ export function CommandMenu({ ...props }: DialogProps) {
   const [open, setOpen] = useState(false);
 
   const [search, setSearch] = useState("");
-
   const deboundValue = useDebounce(search, 500);
 
   const { data: products, error } = useFetchData(
@@ -59,7 +58,7 @@ export function CommandMenu({ ...props }: DialogProps) {
       <Button
         variant="outline"
         className={cn(
-          "relative h-8 w-full justify-start rounded-[0.5rem] bg-muted/50 text-sm font-normal text-muted-foreground shadow-none sm:pr-12 md:w-40 lg:w-64"
+          "relative h-8 w-full justify-start rounded-[0.5rem] bg-muted/50 text-sm font-normal text-muted-foreground shadow-none sm:pr-12 md:w-50 lg:w-64"
         )}
         onClick={() => setOpen(true)}
         {...props}
@@ -82,13 +81,13 @@ export function CommandMenu({ ...props }: DialogProps) {
             {error && <p>Error</p>}
             {products?.map((product: Product) => (
               <CommandItem
-                key={product.id}
+                key={product._id}
                 value={product.name}
                 onSelect={() => {
                   setOpen(false);
                   setSearch("");
 
-                  navigate(`/product/${product.id}`);
+                  navigate(`/product/${product._id}`);
                 }}
               >
                 <PiSneakerThin className="mr-2 h-4 w-4" />

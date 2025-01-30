@@ -18,13 +18,13 @@ const ManageUser = () => {
     data: users,
     isLoading,
     isError,
-  } = useFetchData("/auth/admin/all-user", "", "private");
+  } = useFetchData("/auth/all-users", "", "private");
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error...</div>;
 
   const columns: ColumnDef<User>[] = [
     {
-      accessorKey: "id",
+      accessorKey: "_id",
       header: "ID",
     },
     {
@@ -57,7 +57,7 @@ const ManageUser = () => {
       header: "Avatar",
       cell: ({ row }) => (
         <img
-          src={row.original.photoURL ?? "/user.png"}
+          src={row.original.photoURL || "/user.png"}
           className="object-cover w-16 aspect-square h-auto rounded-md"
           alt={row.original.firstName}
         />
@@ -70,8 +70,8 @@ const ManageUser = () => {
         return (
           <div className="flex items-center gap-3">
             <DeleteService
-              endpoint={`/auth/admin/user/${row.original.id}`}
-              queryKey="/auth/admin/all-user"
+              endpoint={`/auth/${row.original._id}`}
+              queryKey="/auth/all-users"
             >
               <TooltipProvider>
                 <Tooltip>

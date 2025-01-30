@@ -243,7 +243,7 @@ const Explosion = ({ ...props }: React.HTMLProps<HTMLDivElement>) => {
       ></motion.div>
       {spans.map((span) => (
         <motion.span
-          key={span.id}
+          key={span_id}
           initial={{ x: span.initialX, y: span.initialY, opacity: 1 }}
           animate={{
             x: span.directionX,

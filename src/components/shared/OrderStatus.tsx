@@ -11,10 +11,10 @@ import { useQueryClient } from "@tanstack/react-query";
 
 type OrderStatusProps = {
   status: OrderStatus;
-  id: number;
+  _id: string;
 };
 
-const OrderStatus = ({ status, id }: OrderStatusProps) => {
+const OrderStatus = ({ status, _id }: OrderStatusProps) => {
   const orderStatus = [
     "Pending",
     "Confirmed",
@@ -28,13 +28,17 @@ const OrderStatus = ({ status, id }: OrderStatusProps) => {
   const onSuccess = () => {
     toast.success("Order status updated successfully");
     queryClient.invalidateQueries({
-      queryKey: ["fetchData", `/order/all`, `/order/${id}`],
+      queryKey: ["fetchData", `/order/all`, `/order/${_id}`],
     });
   };
 
-  const { mutate, isPending } = useSubmitData(`/order/${id}`, onSuccess, () => {
-    toast.error("An error occurred");
-  });
+  const { mutate, isPending } = useSubmitData(
+    `/order/${_id}`,
+    onSuccess,
+    () => {
+      toast.error("An error occurred");
+    }
+  );
   const handleChange = (value: OrderStatus) => {
     return mutate({
       data: {

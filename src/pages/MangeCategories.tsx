@@ -14,12 +14,13 @@ const MangeCategories = () => {
     data: categories,
     isLoading,
     isError,
-  } = useFetchData("/category/all", "", "normal");
+  } = useFetchData("/category", "", "normal");
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error</div>;
+  console.log(categories);
   const columns: ColumnDef<Category>[] = [
     {
-      accessorKey: "id",
+      accessorKey: "_id",
       header: "ID",
     },
     {
@@ -48,11 +49,11 @@ const MangeCategories = () => {
             <EditProductParents
               instance={row.original}
               type="category"
-              id={row.original.id}
+              _id={row.original._id}
             />
             <DeleteService
-              endpoint={`category/${row.original.id}`}
-              queryKey="/category/all"
+              endpoint={`category/${row.original._id}`}
+              queryKey="/category"
             >
               <Trash2Icon className="h-5 w-5" />
             </DeleteService>

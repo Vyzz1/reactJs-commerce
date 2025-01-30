@@ -11,8 +11,12 @@ const useAxiosPrivate = ({ type }: { type: string }) => {
   useEffect(() => {
     const requestIntercept = axiosInstance.interceptors.request.use(
       (config) => {
+        console.log("Config On");
+
         if (type === "upload") {
           config.headers["Content-Type"] = "multipart/form-data";
+        } else {
+          config.headers["Content-Type"] = "application/json";
         }
 
         if (!config.headers["Authorization"]) {
@@ -34,7 +38,7 @@ const useAxiosPrivate = ({ type }: { type: string }) => {
       async (error) => {
         console.error("Response error:", error);
         const prevRequest = error?.config;
-        if (error?.response?.status === 403 && !prevRequest?.sent) {
+        if (error?.response?.status > 400 && !prevRequest?.sent) {
           prevRequest.sent = true;
           try {
             const newAccessToken = await refresh();

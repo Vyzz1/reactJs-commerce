@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Axios } from "axios";
 import useAxiosPrivate from "./useAxiosPrivate";
-import { normalAxios } from "@/api/axios";
+import axios from "@/api/axios";
 
 export const fetchData = async (customAxios: Axios, endpoint: string) => {
   const response = await customAxios.get(endpoint);
@@ -14,23 +14,14 @@ const useFetchData = (
   enable: boolean = true
 ) => {
   const axiosPrivate = useAxiosPrivate({ type: "private" });
-
   const queryKey =
     uniqueKey !== ""
       ? ["fetchData", endpoint, uniqueKey]
       : ["fetchData", endpoint];
-
-  let axios = null;
-  if (type === "normal") {
-    axios = normalAxios;
-  } else {
-    axios = axiosPrivate;
-  }
-
   return useQuery({
     queryKey: queryKey,
     queryFn: async () => {
-      return fetchData(axios, endpoint);
+      return fetchData(type === "normal" ? axios : axiosPrivate, endpoint);
     },
     enabled: enable,
   });

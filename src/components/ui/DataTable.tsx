@@ -20,14 +20,15 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import React from "react";
-import { Button } from "../ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
+// import { Button } from "../ui/button";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "../ui/select";
+import { DataTablePagination } from "./data-table-pagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -72,10 +73,11 @@ export function DataTable<TData, TValue>({
             onChange={(event) =>
               table.getColumn(filterInput)?.setFilterValue(event.target.value)
             }
-            className="max-w-sm placeholder:capitalize focus-visible:ring-sky-400"
+            className="max-w-sm placeholder:capitalize focus-visible:ring-sky-400 dark:text-emerald-50"
           />
         )}
-        <Select onValueChange={(v) => table.setPageSize(Number(v))}>
+
+        {/* <Select onValueChange={(v) => table.setPageSize(Number(v))}>
           <SelectTrigger className="w-[180px] dark:text-white">
             <SelectValue
               placeholder={`${table.getState().pagination.pageSize} entries`}
@@ -88,7 +90,7 @@ export function DataTable<TData, TValue>({
               </SelectItem>
             ))}
           </SelectContent>
-        </Select>
+        </Select> */}
       </div>
 
       <div className="rounded-md border">
@@ -141,7 +143,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
 
-        <div className="flex items-center justify-end space-x-2 px-2 py-4">
+        {/* <div className="flex items-center justify-end space-x-2 px-2 py-4">
           <span className="text-slate-500 ">
             Page{" "}
             <span className="text-black font-semibold">
@@ -168,7 +170,9 @@ export function DataTable<TData, TValue>({
           >
             Next
           </Button>
-        </div>
+        </div> */}
+
+        <DataTablePagination table={table} />
       </div>
     </>
   );

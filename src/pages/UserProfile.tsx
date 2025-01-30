@@ -17,14 +17,14 @@ const UserProfile = () => {
   useSetTitle("Your Profile");
 
   const { data, isLoading, isError, isSuccess } = useFetchData(
-    "/user/auth",
+    "/auth",
     "",
     "private"
   );
   const onSuccess = () => {
     toast.success("Updated successfully");
   };
-  const { mutate, isPending } = useSubmitData("/user/auth", onSuccess, () => {
+  const { mutate, isPending } = useSubmitData("/user", onSuccess, () => {
     toast.error("Error updating");
   });
 

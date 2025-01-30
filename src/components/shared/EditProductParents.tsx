@@ -4,12 +4,12 @@ import BrandForm from "./BrandForm";
 import CategoryForm from "./CategoryForm";
 
 type EditProductParents = {
-  id: number;
+  _id: string;
   type: "brand" | "category";
   instance: CategoryFormType | BrandFormType;
 };
 
-const EditProductParents = ({ id, type, instance }: EditProductParents) => {
+const EditProductParents = ({ _id, type, instance }: EditProductParents) => {
   return (
     <Sheet>
       <SheetTrigger>
@@ -20,10 +20,10 @@ const EditProductParents = ({ id, type, instance }: EditProductParents) => {
           Edit {type === "brand" ? "Brand" : "Category"}
         </SheetHeader>
         {type === "category" && (
-          <CategoryForm type="update" defaultValues={instance} id={id} />
+          <CategoryForm type="update" defaultValues={instance} _id={_id} />
         )}
         {type === "brand" && (
-          <BrandForm type="update" defaultValues={instance} id={id} />
+          <BrandForm type="update" defaultValues={instance} _id={_id} />
         )}
       </SheetContent>
     </Sheet>

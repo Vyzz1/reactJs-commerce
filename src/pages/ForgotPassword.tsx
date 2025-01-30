@@ -84,7 +84,7 @@ const InputEmail = ({ setProgress }: ForgotPasswordProps) => {
             We will send you an OTP to reset your password
           </FormDescription>
           <Button size="sm" type="submit" disabled={loading}>
-            Send OTP
+            {loading ? "Sending mail..." : "Send OTP"}
           </Button>
         </form>
       </Form>

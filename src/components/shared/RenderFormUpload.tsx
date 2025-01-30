@@ -16,7 +16,7 @@ type RenderFormImageProps<T extends FieldValues> = {
   title: string;
   control: Control<T>;
   className?: string;
-  isMultible: boolean;
+  isMultiple: boolean;
   type: "input" | "drop-zone";
   accecptedFiles?: string;
   desciprtion?: string;
@@ -29,7 +29,7 @@ const RenderFormUpload = ({
   control,
   className,
   accecptedFiles,
-  isMultible,
+  isMultiple = false,
   desciprtion,
 }: RenderFormImageProps<FieldValues>) => {
   return (
@@ -44,13 +44,15 @@ const RenderFormUpload = ({
               {type === "input" ? (
                 <Input
                   type="file"
-                  onChange={(event) => field.onChange(event.target.files)}
-                  multiple={isMultible}
+                  onChange={(event) => {
+                    field.onChange(event.target.files);
+                  }}
+                  multiple={isMultiple}
                   accept={accecptedFiles}
                 />
               ) : type === "drop-zone" ? (
                 <Dropzone
-                  isMultiple={isMultible}
+                  isMultiple={isMultiple}
                   acceptType={accecptedFiles}
                   onChange={field.onChange}
                 />

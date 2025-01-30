@@ -27,6 +27,11 @@ export const userNavbar: NavbarType[] = [
     icon: <FaUserAstronaut className={iconClassName} />,
   },
   {
+    label: "History Payments",
+    href: "/user/history-payments",
+    icon: <FcMoneyTransfer className={iconClassName} />,
+  },
+  {
     label: "Update Your Address",
     href: "/user/address",
     icon: <PiAddressBookLight className={iconClassName} />,
@@ -63,6 +68,11 @@ export const adminNavbar: NavbarType[] = [
     label: "Manage Product",
     href: "/admin/manage-product",
     icon: <Settings2Icon className={iconClassName} />,
+  },
+  {
+    label: "Manage Payments",
+    icon: <FcMoneyTransfer className={iconClassName} />,
+    href: "/admin/manage-payments",
   },
   {
     label: "Manage Orders",

@@ -9,12 +9,14 @@ import {
   TooltipTrigger,
 } from "../ui/tooltip";
 import NoDataState from "./NoDataState";
+import { Card, CardContent, CardFooter } from "../ui/card";
+import { Skeleton } from "../ui/skeleton";
 
 export const ProductCard = ({ product }: { product: Product }) => {
   const navigate = useNavigate();
   return (
     <div
-      onClick={() => navigate(`/product/${product.id}`)}
+      onClick={() => navigate(`/product/${product._id}`)}
       className="space-y-3  border rounded-sm border-slate-400"
     >
       <img
@@ -33,8 +35,11 @@ export const ProductCard = ({ product }: { product: Product }) => {
             <TooltipContent>{product.name}</TooltipContent>
           </Tooltip>
         </TooltipProvider>
-        <p className="text-amber-600 font-normal text-lg font-beViet">
-          {product.price}$
+        <p className="text-red-400 font-bold text-lg font-beViet">
+          {product.price.toLocaleString("en-US", {
+            style: "currency",
+            currency: "USD",
+          })}
         </p>
         <div className="flex items-center justify-between px-2">
           <Badge variant="outline" className="border border-zinc-700">
@@ -52,17 +57,28 @@ export const ProductCard = ({ product }: { product: Product }) => {
 type ProductListProps = {
   products: Product[];
   className?: string;
+  isLoading?: boolean;
 };
 
-const ProductList = ({ products, className }: ProductListProps) => {
+const ProductList = ({ products, className, isLoading }: ProductListProps) => {
   return (
     <>
       <div className={cn("gap-3", className)}>
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
+        {!isLoading ? (
+          <>
+            {products.map((product) => (
+              <ProductCard key={product._id} product={product} />
+            ))}
+          </>
+        ) : (
+          <>
+            {...new Array(4)
+              .fill(0)
+              .map((_, i) => <ProductCardSkeleton key={i} />)}
+          </>
+        )}
       </div>
-      {products.length === 0 && (
+      {!isLoading && products?.length === 0 && (
         <NoDataState
           title="No Product Found"
           desc="We couldn't find any product matching your search criteria"
@@ -73,3 +89,34 @@ const ProductList = ({ products, className }: ProductListProps) => {
 };
 
 export default ProductList;
+
+export function ProductCardSkeleton() {
+  return (
+    <Card className="w-full max-w-sm overflow-hidden">
+      {/* Product Image Skeleton */}
+      <Skeleton className="aspect-square w-full" />
+
+      <CardContent className="p-4 space-y-4">
+        {/* Product Title Skeleton */}
+        <div className="space-y-2">
+          <Skeleton className="h-6 w-3/4" />
+          <Skeleton className="h-4 w-1/4" />
+        </div>
+
+        {/* Price Skeleton */}
+        <Skeleton className="h-8 w-24" />
+
+        {/* Variant Options Skeleton */}
+        <div className="flex gap-2">
+          <Skeleton className="h-8 w-20 rounded-full" />
+          <Skeleton className="h-8 w-20 rounded-full" />
+        </div>
+      </CardContent>
+
+      <CardFooter className="p-4 pt-0">
+        {/* Size Availability Skeleton */}
+        <Skeleton className="h-4 w-16" />
+      </CardFooter>
+    </Card>
+  );
+}

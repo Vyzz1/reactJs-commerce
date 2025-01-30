@@ -5,7 +5,7 @@ declare type NavbarProps = {
 };
 
 declare type UserAddress = {
-  id?: number;
+  _id?: string;
   fullName: string;
   phoneNumber: string;
   district: string;
@@ -16,35 +16,35 @@ declare type UserAddress = {
 };
 
 declare type VariationOption = {
-  id: number;
+  _id: string;
   value: string;
   variation: {
-    id: number;
+    _id: string;
     name: string;
   };
 };
 
 declare type ProductSize = {
-  id: number;
+  _id: string;
   value: string;
 };
 
 declare type ProductItem = {
-  id: number;
+  _id: string;
   quantity: number;
   productSize: ProductSize;
-  sku: string | null;
   productName?: string;
   productPrice?: number;
   avatar?: string;
   color?: string;
+  product: Product;
 };
 
 declare type CartItem = {
-  id: number;
+  _id: string;
   quantity: number;
   productName: string;
-  productId: number;
+  product_id: string;
   productItem: ProductItem;
   image: string;
   productPrice: number;
@@ -53,7 +53,7 @@ declare type CartItem = {
 };
 
 declare type Category = {
-  id: number;
+  _id: string;
   name: string;
   image: string;
 };
@@ -61,25 +61,29 @@ declare type Category = {
 declare type variationsTotal = Record<any, string[]>;
 
 declare type Brand = {
-  id: number;
+  _id: string;
   name: string;
   image?: string;
 };
 
 declare type Product = {
   sizes: string[];
-  id: number;
+  _id: string;
   name: string;
   description: string;
   images: string[];
   category: Category;
   price: number;
-  productColorId: number;
+  productColor_id: string;
   colorName: string;
   brand: Brand;
   avatar: string;
   showHomepage: boolean;
   productItems?: ProductItem[];
+  productColor: {
+    _id: string;
+    value: string;
+  };
 };
 
 declare type OrderStatus =
@@ -90,24 +94,30 @@ declare type OrderStatus =
   | "Cancelled";
 
 declare type OrderDetails = {
-  id: number;
+  _id: string;
   quantity: number;
   productItem: ProductItem;
 };
 
 declare type OrderType = {
-  id: number;
+  _id: string;
   createdAt: Date;
   orderDetails: OrderDetails[];
   shippingFee: number;
   user: User;
   status: OrderStatus;
-  address: UserAddress;
   total: number;
+  address: string;
+  specify: string;
+  phoneNumber: string;
+  method: "cash" | "stripe";
+  statusPay: string;
+  referenceId: string;
+  fullName: string;
 };
 
 declare type User = {
-  id: number;
+  _id: string;
   email: string;
   firstName: string;
   lastName: string;
@@ -115,3 +125,24 @@ declare type User = {
   dob?: string;
   photoURL?: string;
 };
+
+declare interface SmallProduct {
+  name: string;
+  price: number;
+  quantity: number;
+  avatar: string;
+  color: string;
+  size: string;
+  _id: string;
+}
+
+declare interface Payment {
+  _id: string;
+  total: number;
+  method: string;
+  status: string;
+  user: User;
+  product: Array<SmallProduct>;
+  referenceId: string;
+  createdAt: string;
+}

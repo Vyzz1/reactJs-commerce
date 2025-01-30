@@ -5,7 +5,7 @@ import { DataTableColumnHeader } from "@/components/ui/ColumnHeader";
 import { DataTable } from "@/components/ui/DataTable";
 import useFetchData from "@/hooks/useFetchData";
 import useSetTitle from "@/hooks/useSetTitle";
-import { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 import { Trash2Icon } from "lucide-react";
 import { useParams } from "react-router-dom";
 
@@ -14,16 +14,17 @@ const ProductConfig = () => {
 
   const { id } = useParams<{ id: string }>();
   const { data, isLoading, isError } = useFetchData(
-    `/product/${id}/config`,
+    `/product-item/config/${id}`,
     "",
     "private"
   );
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error...</div>;
+
   const columns: ColumnDef<ProductItem>[] = [
     {
-      accessorKey: "id",
+      accessorKey: "_id",
       header: "ID",
     },
     {
@@ -43,13 +44,10 @@ const ProductConfig = () => {
       header: "Actions",
       cell: ({ row }) => (
         <div className="flex items-center gap-x-2 ">
-          <EditProductItem
-            prodcutId={parseInt(id)}
-            productItem={row.original}
-          />
+          <EditProductItem productId={id} productItem={row.original} />
           <DeleteService
-            endpoint={`product-item/${row.original.id}`}
-            queryKey={`/product/${id}/config`}
+            endpoint={`product-item/${row.original._id}`}
+            queryKey={`/product-item/config/${id}`}
           >
             <Trash2Icon className="text-red-500" size={18} />
           </DeleteService>
@@ -65,7 +63,7 @@ const ProductConfig = () => {
           Product Config for ID: <span className="text-sky-700">{id}</span>
         </h2>
         <div className="w-full ml-auto">
-          <CreateProductItem productId={parseInt(id)} />
+          <CreateProductItem productId={id} />
         </div>
         <DataTable columns={columns} data={data} />
       </div>

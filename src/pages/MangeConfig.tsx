@@ -16,18 +16,18 @@ const MangeConfig = () => {
     data: sizes,
     isLoading: sizeLoading,
     isError: sizeError,
-  } = useFetchData("/size/all", "", "normal");
+  } = useFetchData("/size", "", "normal");
 
   const {
     data: colors,
     isLoading: colorLoading,
     isError: colorError,
-  } = useFetchData("/color/all", "", "normal");
+  } = useFetchData("/color", "", "normal");
   if (sizeLoading || colorLoading) return <div>Loading...</div>;
   if (sizeError || colorError) return <div>Error</div>;
   const sizeColumns: ColumnDef<ProductSize>[] = [
     {
-      accessorKey: "id",
+      accessorKey: "_id",
       header: "ID",
     },
     {
@@ -43,8 +43,8 @@ const MangeConfig = () => {
         return (
           <div className="flex gap-2 items-center">
             <DeleteService
-              endpoint={`size/${row.original.id}`}
-              queryKey="/size/all"
+              endpoint={`size/${row.original._id}`}
+              queryKey="/size"
             >
               <Trash2Icon className="h-5 w-5" />
             </DeleteService>
@@ -56,7 +56,7 @@ const MangeConfig = () => {
 
   const colorColumns: ColumnDef<ProductSize>[] = [
     {
-      accessorKey: "id",
+      accessorKey: "_id",
       header: "ID",
     },
     {
@@ -72,8 +72,8 @@ const MangeConfig = () => {
         return (
           <div className="flex gap-2 items-center">
             <DeleteService
-              endpoint={`color/${row.original.id}`}
-              queryKey="/color/all"
+              endpoint={`color/${row.original._id}`}
+              queryKey="/color"
             >
               <Trash2Icon className="h-5 w-5" />
             </DeleteService>

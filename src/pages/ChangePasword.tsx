@@ -31,6 +31,7 @@ const ChangePasword = () => {
 
   const onSuccess = () => {
     toast.success("Password changed successfully");
+    form.reset();
   };
 
   const { mutate } = useSubmitData(
@@ -58,7 +59,7 @@ const ChangePasword = () => {
   };
   return (
     <section className="py-8">
-      <h2 className="font-bold  text-gray-950 tracking-wide text-2xl">
+      <h2 className="font-bold  dark:text-white text-gray-950 tracking-tight text-2xl">
         Change Pasword
       </h2>
 

@@ -37,7 +37,8 @@ const OrderTracking = ({ status }: { status: OrderStatus }) => {
                 className={clsx(
                   "size-12 bg-indigo-600 border-2 border-transparent rounded-full flex justify-center items-center mx-auto mb-3 text-sm text-white lg:size-12",
                   {
-                    "!bg-gray-300 text-gray-300": activeStep.id < step.id,
+                    "!bg-gray-300 dark:!text-gray-500 ":
+                      activeStep.id < step.id,
                   }
                 )}
               >

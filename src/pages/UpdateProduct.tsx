@@ -25,9 +25,6 @@ const UpdateProduct = () => {
     if (isSuccess) {
       setDefaultValues({
         ...product,
-        categoryId: product.categoryId.toString(),
-        brandId: product.brandId.toString(),
-        productColorId: product.productColorId.toString(),
       });
       setImages(product.images);
     }
@@ -60,7 +57,7 @@ const UpdateProduct = () => {
                 images={images}
                 setImages={setImages}
                 className="space-y-8 col-span-10 lg:col-span-7 "
-                id={parseInt(id)}
+                _id={id}
                 defaultValues={defaultValues}
                 type="update"
               />

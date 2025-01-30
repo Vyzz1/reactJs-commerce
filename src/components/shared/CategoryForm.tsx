@@ -9,7 +9,6 @@ import { Button } from "../ui/button";
 import { CategoryFormType, categorySchema } from "@/zod";
 import { useState } from "react";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
-import { baseURL } from "@/api/axios";
 import useSubmitData from "@/hooks/useSubmitData";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
@@ -19,15 +18,15 @@ type CategoryFormProps = {
   className?: string;
   type: "create" | "update";
 } & (
-  | { type: "create"; id?: never; defaultValues?: CategoryFormType }
-  | { type: "update"; id: number; defaultValues: CategoryFormType }
+  | { type: "create"; _id?: never; defaultValues?: CategoryFormType }
+  | { type: "update"; _id: string; defaultValues: CategoryFormType }
 );
 
 const CategoryForm = ({
   defaultValues,
   className,
   type,
-  id,
+  _id,
 }: CategoryFormProps) => {
   const form = useForm<z.infer<typeof categorySchema>>({
     defaultValues: defaultValues,
@@ -40,13 +39,13 @@ const CategoryForm = ({
 
   const success = () => {
     queryClient.invalidateQueries({
-      queryKey: ["fetchData", "/category/all"],
+      queryKey: ["fetchData", "/category"],
     });
     toast.success(`Category ${type === "create" ? "created" : "updated"}!`);
   };
   const axios = useAxiosPrivate({ type: "upload" });
 
-  const endpoint = type === "create" ? "/category" : `/category/${id}`;
+  const endpoint = type === "create" ? "/category" : `/category/${_id}`;
 
   const { mutate, isPending } = useSubmitData(endpoint, success, (err: any) => {
     if (err.response.data.message) {
@@ -99,7 +98,7 @@ const CategoryForm = ({
           control={form.control}
           title="Category Image"
           type="input"
-          isMultible={false}
+          isMutiple={false}
         />
         {type === "update" && defaultValues?.image && (
           <img

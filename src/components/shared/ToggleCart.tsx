@@ -18,7 +18,7 @@ const ToggleCart = () => {
     data: carts,
     isLoading,
     isError,
-  } = useFetchData("/cart/auth", "", "private");
+  } = useFetchData("/cart", "", "private");
 
   return (
     <Sheet>
@@ -59,14 +59,14 @@ const ToggleCart = () => {
               </div>
             </>
           ) : (
-            carts?.map((cart: CartItem) => (
+            carts?.map((cart: any) => (
               <div
                 className="py-2 flex xl:flex-row flex-col gap-y-2 justify-between items-center xl:items-start"
-                key={cart.id}
+                key={cart._id}
               >
                 <div className=" flex items-center gap-x-3">
                   <img
-                    src={cart.avatar}
+                    src={cart.productItem.product.avatar}
                     alt={cart.productName}
                     loading="lazy"
                     className="size-28 aspect-square object-cover rounded-md"
@@ -74,10 +74,11 @@ const ToggleCart = () => {
                   <div className="flex flex-col gap-y-3 ite">
                     <div className="space-y-1">
                       <p className="text-base font-semibold max-w-[200px] truncate">
-                        {cart.productName}
+                        {cart.productItem.product.name}
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        {cart.productItem.productSize.value} - {cart.color}
+                        {cart.productItem.productSize.value} -{" "}
+                        {cart.productItem.product.productColor.value}
                       </p>
                       <p className="text-sm">
                         Quantity :{" "}
@@ -86,8 +87,8 @@ const ToggleCart = () => {
                     </div>
 
                     <DeleteService
-                      endpoint={`cart/${cart.id}`}
-                      queryKey="/cart/auth"
+                      endpoint={`cart/${cart._id}`}
+                      queryKey="/cart"
                     >
                       <div className="gap-x-1 max-w-[100px] items-center cursor-pointer flex">
                         <XIcon className="size-4 text-gray-400" />
@@ -97,7 +98,7 @@ const ToggleCart = () => {
                   </div>
                 </div>
                 <p className="text-base text-red-500 font-semibold font-inter">
-                  {cart.productPrice}$
+                  {cart.productItem.product.price}$
                 </p>
               </div>
             ))
