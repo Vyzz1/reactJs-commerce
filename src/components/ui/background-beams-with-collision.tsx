@@ -158,7 +158,7 @@ const CollisionMechanism = React.forwardRef<
     const animationInterval = setInterval(checkCollision, 50);
 
     return () => clearInterval(animationInterval);
-  }, [cycleCollisionDetected, containerRef]);
+  }, [cycleCollisionDetected, containerRef, parentRef]);
 
   useEffect(() => {
     if (collision.detected && collision.coordinates) {
@@ -243,7 +243,7 @@ const Explosion = ({ ...props }: React.HTMLProps<HTMLDivElement>) => {
       ></motion.div>
       {spans.map((span) => (
         <motion.span
-          key={span_id}
+          key={span.id}
           initial={{ x: span.initialX, y: span.initialY, opacity: 1 }}
           animate={{
             x: span.directionX,
